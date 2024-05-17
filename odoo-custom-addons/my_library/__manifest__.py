@@ -23,7 +23,9 @@ Long description of module's purpose
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/library_book.xml'
+        'security/groups.xml',
+        'security/ir.model.access.csv',
+        'views/library_book.xml',
         'views/views.xml',
         'views/templates.xml',
     ],
