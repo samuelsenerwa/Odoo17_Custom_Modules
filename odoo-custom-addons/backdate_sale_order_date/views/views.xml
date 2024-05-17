@@ -1,0 +1,14 @@
+<odoo>
+  <data>
+    <record id="view_sales_form_inherit" model="ir.ui.view">
+      <field name="name">sales.order.form.inherit</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='date_order']" position="attributes">
+          <attribute name="modifiers">{"required": true, "invisible": false}</attribute>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
