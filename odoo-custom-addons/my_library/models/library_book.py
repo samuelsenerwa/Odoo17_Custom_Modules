@@ -131,6 +131,18 @@ class LibraryBook(models.Model):
         readonly=True
     )
 
+    # adding dynamic relations using reference fields
+    @api.model
+    def _referencable_models(self):
+        models = self.env['ir.model'].search([
+            ('field_id.name', '=', 'message_ids')
+        ])
+        return [(x.model, x.name) for x in models]
+    ref_doc_id = fields.Reference(
+        selection='_referencable_models',
+        string='Reference Document'
+    )
+
     # extend partner model
 
 
