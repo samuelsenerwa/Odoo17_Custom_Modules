@@ -124,6 +124,12 @@ class LibraryBook(models.Model):
         context={},
         domain=[],
     )
+    # adding the related field to publisher's id
+    publisher_city = fields.Char(
+        'Publisher City',
+        related='publisher_id.city',
+        readonly=True
+    )
 
     # extend partner model
 
