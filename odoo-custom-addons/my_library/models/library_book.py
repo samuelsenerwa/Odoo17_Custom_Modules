@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+
+from odoo.odoo import api
 
 
 # add fields to the model
@@ -50,6 +53,25 @@ class LibraryBook(models.Model):
         # optional: currency_field='currency_id',
     )
 
+    # Adding constraint validation to a model
+    _sql_constraints = [
+        ('name_uniq', 'UNIQUE(name)',
+         'Book title must be unique.'
+         ),
+        ('positive_page', 'CHECK(pages>0)',
+         'No of pages must be positive'
+         )
+    ]
+
+    # python constraint
+    @api.constrains('date_release')
+    def _check_release_date(self):
+        for record in self:
+            if record.date_release and record.date_release > fields.Date.today():
+                raise  models.ValidationError(
+                    'Release date must be in the past'
+                )
+
     # using res.partner for many2one field to find books pubisher
     publisher_id = fields.Many2one(
         'res.partner', string='Publisher',
@@ -60,6 +82,8 @@ class LibraryBook(models.Model):
     )
 
     # extend partner model
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     published_book_ids = fields.One2many(
@@ -70,7 +94,7 @@ class ResPartner(models.Model):
     authored_book_ids = fields.Many2many(
         'library.book',
         string='Authored Books',
-    #     relation='library_books_res_partner_rel' # optional
+        #     relation='library_books_res_partner_rel' # optional
     )
 
     #     add a release date in the record's name
