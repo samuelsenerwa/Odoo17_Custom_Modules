@@ -138,6 +138,7 @@ class LibraryBook(models.Model):
             ('field_id.name', '=', 'message_ids')
         ])
         return [(x.model, x.name) for x in models]
+
     ref_doc_id = fields.Reference(
         selection='_referencable_models',
         string='Reference Document'
@@ -177,6 +178,21 @@ def name_get(self):
         rec_name = "%s (%s)" % (record.name, record.date_release)
         result.append((record.id, rec_name))
         return result
+
+
+# delegation inheritance
+class LibraryMember(models.Model):
+    _name = 'library.member'
+    _inherits = {'res.partner': 'partner_id'}
+    partner_id = fields.Many2one(
+        'res.partner',
+        ondelete='cascade',
+        delegate=True
+    )
+    date_start = fields.Date('Member Since')
+    date_end = fields.Date('Termination Date')
+    member_number = fields.Char()
+    date_of_birth = fields.Date('Date of birth')
 
 # class my_library(models.Model):
 #     _name = 'my_library.my_library'
