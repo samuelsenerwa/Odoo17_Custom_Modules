@@ -17,6 +17,8 @@ class LibraryBook(models.Model):
          ],
         'State', default="draft"
     )
+    # assigning category to a book
+    category_id = fields.Many2one('library.book.category')
     description = fields.Html('Description', sanitize=True, strip_style=False)
     cover = fields.Binary('Book Cover')
     out_of_print = fields.Boolean('Out of Print?')
