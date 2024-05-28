@@ -7,9 +7,22 @@ from odoo.exceptions import ValidationError
 from odoo.odoo import api
 
 
+# Using abstract models for reusable model features
+class BaseArchive(models.AbstractModel):
+    _name = 'base.archive'
+    active = fields.Boolean(default=True)
+
+    def do_archive(self):
+        for record in self:
+            record.active = not record.active
+
+
 # add fields to the model
 class LibraryBook(models.Model):
     _name = 'library.book'
+    # Using abstract models for reusable model
+    # features
+    _inherit = ['base.archive']
     _description = 'Library Book'
     _order = 'date_release desc, name'
     _rec_name = 'short_name'
