@@ -143,11 +143,12 @@ class LibraryBook(models.Model):
         string='Reference Document'
     )
 
-    # extend partner model
+    # extend and inherit partner model
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+    _order = 'name'
     published_book_ids = fields.One2many(
         'library.book', 'publisher_id',
         string='Published Books'
@@ -158,6 +159,14 @@ class ResPartner(models.Model):
         string='Authored Books',
         #     relation='library_books_res_partner_rel' # optional
     )
+    count_books = fields.Integer('Number of Authored Books',
+                                 compute='_compute_count_books')
+
+    # method to compute the book count
+    @api.depends('authored_book_ids')
+    def _compute_count_books(self):
+        for r in self:
+            r.count_books = len(r.authored_book_ids)
 
     #     add a release date in the record's name
 
