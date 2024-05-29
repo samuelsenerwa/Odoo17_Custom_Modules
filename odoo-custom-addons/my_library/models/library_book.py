@@ -25,8 +25,9 @@ class LibraryBook(models.Model):
 
     notes = fields.Text('Internal Notes')
     state = fields.Selection(
-        [('draft', 'Not Available'),
+        [('draft', 'Unavailable'),
          ('available', 'Available'),
+         ('borrowed', 'Borrowed'),
          ('lost', 'Lost')],
         'State', default="draft"
     )
@@ -69,6 +70,37 @@ class LibraryBook(models.Model):
         store=False,
         compute_sudo=True
     )
+
+    # basic serverside rendering
+    # check whether state transition is allowed
+    @api.model
+    def is_allowed_transition(self, old_state, new_state):
+        allowed = [('draft', 'available'),
+                   ('available', 'borrowed'),
+                   ('borrowed', 'available'),
+                   ('available', 'lost'),
+                   ('borrowed', 'lost'),
+                   ('lost', 'available')
+                   ]
+        return (old_state, new_state) in allowed
+
+    # method to change the state of some books to new state that is passed as an argument
+    def change_state(self, new_state):
+        for book in self:
+            if book.is_allowed_transition(book.state, new_state):
+                book.state = new_state
+            else:
+                continue
+
+    #  method to change the book state by calling change_state
+    def make_available(self):
+        self.change_state('available')
+
+    def make_borrowed(self):
+        self.change_state('borrowed')
+
+    def make_lost(self):
+        self.change_state('lost')
 
     @api.depends('date_release')
     def _compute_age(self):
