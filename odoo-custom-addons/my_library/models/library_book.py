@@ -117,6 +117,13 @@ class LibraryBook(models.Model):
             raise UserError(error_msg)
         return content
 
+    # obtaining record set
+    def log_all_library_members(self):
+        library_member_model = self.env['library.member']
+        all_members = library_member_model.search([])
+        print("ALL MEMBERS:", all_members)
+        return True
+
     @api.depends('date_release')
     def _compute_age(self):
         today = fields.Date.today()
