@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from datetime import timedelta
+
+import requests
+
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
+from odoo.tools.translate import _
 
 
 # Using abstract models for reusable model features
@@ -90,7 +94,8 @@ class LibraryBook(models.Model):
             if book.is_allowed_transition(book.state, new_state):
                 book.state = new_state
             else:
-                continue
+                msg = _('Moving from %s to %s is not allowed') % (book.state, new_state)
+                raise UserError(msg)
 
     #  method to change the book state by calling change_state
     def make_available(self):
@@ -101,6 +106,16 @@ class LibraryBook(models.Model):
 
     def make_lost(self):
         self.change_state('lost')
+
+    # using try...cache block
+    def post_to_webservice(self, data):
+        try:
+            req = requests.post('http://my-test-service.com', data=data, timeout=10)
+            content = req.json()
+        except IOError:
+            error_msg = _("Something went wrong during data submission")
+            raise UserError(error_msg)
+        return content
 
     @api.depends('date_release')
     def _compute_age(self):
