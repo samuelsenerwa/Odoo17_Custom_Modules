@@ -22,6 +22,7 @@ class BaseArchive(models.AbstractModel):
 # Add fields to the model
 class LibraryBook(models.Model):
     _name = 'library.book'
+    manager_remarks = fields.Text('Manager Remarks')
     _inherit = ['base.archive']
     _description = 'Library Book'
     _order = 'date_release desc, name'
@@ -229,6 +230,27 @@ class LibraryBook(models.Model):
         selection='_referencable_models',
         string='Reference Document'
     )
+
+    # extend using create()
+    @api.model
+    def create(self, values):
+        if not self.user_has_groups('my_library.acl_book_librarian'):
+            if 'manager_remarks' in values:
+                raise UserError(
+                    'You are not allowed to modify'
+                    'manager_remarks'
+                )
+        return super(LibraryBook, self).create(values)
+
+    #     extend the write()
+    def write(self, values):
+        if not self.user_has_groups('my_library.acl_book_librarian'):
+            if 'manager_remarks' in values:
+                raise UserError(
+                    'You are not allowed to modify'
+                    'manager_remarks'
+                )
+        return super(LibraryBook, self).write(values)
 
 
 class ResPartner(models.Model):
