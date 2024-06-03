@@ -30,6 +30,7 @@
                         <field name="state"/>
                         <field name="pages"/>
                         <field name="notes"/>
+                        <field name="old_edition"/>
                     </group>
                     <group>
                         <field name="short_name"/>
