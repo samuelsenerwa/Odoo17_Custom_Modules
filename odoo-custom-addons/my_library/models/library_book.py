@@ -124,6 +124,52 @@ class LibraryBook(models.Model):
         print("ALL MEMBERS:", all_members)
         return True
 
+    # updating recordset values
+    def change_release_date(self):
+        self.ensure_one()
+        self.date_release = fields.Date.today()
+
+    # search for records
+    def find_book(self):
+        domain = [
+            '|'
+            '&', ('name', 'ilike', 'Book Name'),
+            ('category_id.name', 'ilike', 'Category Name'),
+            '&', ('name', 'ilike', 'Book Name 2'),
+            ('category_id.name', 'ilike', 'Category Name 2')
+        ]
+        books = self.search_count(domain)
+
+    def find_partner(self):
+        PartnerObj = self.env['res.partner']
+        domain = [
+            '&', ('name', 'ilike', 'Parth Gajjar'),
+            ('company_id.name', '=', 'Odoo')
+        ]
+        partner = PartnerObj.searh(domain)
+
+    # combining record sets
+
+    # filtering recordsets
+    @api.model
+    def books_with_multiple_authors(self, all_books):
+        def predicate(book):
+            if len(book.author_ids) > 1:
+                return True
+            return False
+
+        return all_books.filter(predicate)
+
+    # traversing recordset relations
+    @api.model
+    def get_author_names(self, books):
+        return books.mapped('author_ids.name')
+
+    # sorting record set
+    @api.model
+    def sort_books_by_date(self, books):
+        return books.sorted(key='release_date')
+
     @api.depends('date_release')
     def _compute_age(self):
         today = fields.Date.today()
