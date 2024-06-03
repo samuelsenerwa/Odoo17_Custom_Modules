@@ -4,7 +4,7 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
-class BookCategory(models.Model):
+class LibraryBookCategory(models.Model):
     _name = 'library.book.category'
     name = fields.Char('Category')
     parent_id = fields.Many2one(
