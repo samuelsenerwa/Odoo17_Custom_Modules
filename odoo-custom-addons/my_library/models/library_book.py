@@ -287,6 +287,16 @@ class ResPartner(models.Model):
                 limit=limit, name_get_uid=name_get_uid
             )
 
+    # extracting grouped results using read_group()
+    @api.model
+    def _get_average_cost(self):
+        grouped_result = self.read_group(
+            [('cost_price', '!=', False)],  # Domain
+            ['category_id', 'cost_price:avg'],  # Fields to access
+            ['category_id']  # group_by
+        )
+        return grouped_result
+
 
 class LibraryMember(models.Model):
     _name = 'library.member'
