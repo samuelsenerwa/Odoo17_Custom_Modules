@@ -49,23 +49,12 @@ class LibraryBook(models.Model):
                            groups='base.group_user',
                            states={'lost': [('readonly', True)]},
                            help='Total book page count')
-    reader_rating = fields.Float(
-        'Reader Average Rating',
-        digits=(14, 4),
-    )
-    author_ids = fields.Many2many(
-        'res.partner',
-        'Authors'
-    )
-    cost_price = fields.Float(
-        'Book Cost', digits='Book Price'
-    )
-    currency_id = fields.Many2one(
-        'res.currency', string='Currency'
-    )
-    retail_price = fields.Monetary(
-        'Retail Price',
-    )
+    reader_rating = fields.Float('Reader Average Rating', digits=(14, 4),
+                                 )
+    author_ids = fields.Many2many('res.partner', string='Authors')
+    cost_price = fields.Float('Book Cost')
+    currency_id = fields.Many2one('res.currency', string='Currency')
+    retail_price = fields.Monetary('Retail Price')
 
     # Adding computational field to calculate book's age since its release date
     age_days = fields.Float(
