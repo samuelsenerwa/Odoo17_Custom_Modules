@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from datetime import timedelta
 
 import requests
-
-import logging
-
-from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.translate import _
+
+from odoo import models, fields, api
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +45,7 @@ class LibraryBook(models.Model):
     out_of_print = fields.Boolean('Out of Print?')
     name = fields.Char('Title', required=True)
     isbn = fields.Char('ISBN')
+    old_edition = fields.Many2one('res.partner', string="Authors")
     short_name = fields.Char('Short Title', translate=True, index=True, required=True)
     date_release = fields.Date('Release Date')
     date_updated = fields.Datetime('Last Updated')
@@ -312,7 +312,7 @@ class ResPartner(models.Model):
             authors = book.author_ids.mapped('name')
             name = "%s (%s)" % (book.name, ','.join(authors))
             result.append(book.id, name)
-            return result
+        return result
 
     # how the user searches for a book
     @api.model
@@ -330,6 +330,10 @@ class ResPartner(models.Model):
             )
 
     # extracting grouped results using read_group()
+    def grouped_data(self):
+        data = self._get_average_cost()
+        logger.info("Grouped Data %s" % data)
+
     @api.model
     def _get_average_cost(self):
         grouped_result = self.read_group(
@@ -340,9 +344,17 @@ class ResPartner(models.Model):
         return grouped_result
 
 
+class BookCategory(models.Model):
+    _name = 'library.book.category'
+
+    name = fields.Char('Category')
+    description = fields.Text('Description')
+
+
 class LibraryMember(models.Model):
     _name = 'library.member'
     _inherits = {'res.partner': 'partner_id'}
+    _description = "Library Member"
 
     partner_id = fields.Many2one(
         'res.partner',
