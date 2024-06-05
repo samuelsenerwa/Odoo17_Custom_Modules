@@ -4,9 +4,13 @@ from datetime import timedelta
 
 import requests
 
+import logging
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.translate import _
+
+logger = logging.getLogger(__name__)
 
 
 # Using abstract models for reusable model features
@@ -65,6 +69,26 @@ class LibraryBook(models.Model):
         store=False,
         compute_sudo=True
     )
+
+    def create_categories(self):
+        categ1 = {
+            'name': 'Child Category 1',
+            'description': 'Description for child 1'
+        }
+        categ2 = {
+            'name': 'Child category 2',
+            'description': 'Description for child 2'
+        }
+        parent_category_val = {
+            'name': 'Parent category',
+            'email': 'Description for parent category',
+            'child_ids': [
+                (0, 0, categ1),
+                (0, 0, categ2),
+            ]
+        }
+        record = self.env['library.book.category'].create(parent_category_val)
+        return True
 
     # basic serverside rendering
     # check whether state transition is allowed
@@ -127,9 +151,11 @@ class LibraryBook(models.Model):
             '&', ('name', 'ilike', 'Book Name'),
             ('category_id.name', 'ilike', 'Category Name'),
             '&', ('name', 'ilike', 'Book Name 2'),
-            ('category_id.name', 'ilike', 'Category Name 2')
+            ('category_id.name', '=', 'Category Name 2')
         ]
         books = self.search_count(domain)
+        logger.info('Books not found: %s', books)
+        return True
 
     def find_partner(self):
         PartnerObj = self.env['res.partner']
@@ -141,7 +167,12 @@ class LibraryBook(models.Model):
 
     # combining record sets
 
-    # filtering recordsets
+    # filtering recordset
+    def filter_books(self):
+        all_books = self._search([])
+        filtered_books = self.books_with_multiple_authors(all_books)
+        logger.info('Filtered Book: %s', filtered_books)
+
     @api.model
     def books_with_multiple_authors(self, all_books):
         def predicate(book):
@@ -152,11 +183,22 @@ class LibraryBook(models.Model):
         return all_books.filter(predicate)
 
     # traversing recordset relations
+    def mapped_books(self):
+        all_books = self.search([])
+        books_authors = self.get_author_names(all_books)
+        logger.info('Book Authors: %s', books_authors)
+
     @api.model
     def get_author_names(self, books):
         return books.mapped('author_ids.name')
 
     # sorting record set
+    def sort_books(self):
+        all_books = self.search([])
+        books_sorted = self.sort_books_by_date(all_books)
+        logger.info('Books before sorting: %s', all_books)
+        logger.info('Books after sorting: %s', books_sorted)
+
     @api.model
     def sort_books_by_date(self, books):
         return books.sorted(key='release_date')
