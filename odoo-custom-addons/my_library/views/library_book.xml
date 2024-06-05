@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!--    Data records go here-->
+    <!-- Data records go here -->
     <record id="library_book_action" model="ir.actions.act_window">
         <field name="name">Library Books</field>
         <field name="res_model">library.book</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <!--        Menu Items-->
+    <!-- Menu Items -->
     <menuitem name="My Library" id="library_base_menu"/>
     <menuitem name="Books" id="library_book_menu" parent="library_base_menu" action="library_book_action"/>
-    <!--        Custom form View-->
+    <!-- Custom form View -->
     <record id="library_book_view_form" model="ir.ui.view">
-        <field name="name">Libray Book Form</field>
+        <field name="name">Library Book Form</field>
         <field name="model">library.book</field>
         <field name="arch" type="xml">
             <form>
-                <!--     Button to trigger methods from the user interface-->
+                <!-- Button to trigger methods from the user interface -->
                 <button name="make_available" string="Make Available" type="object"/>
                 <button name="make_borrowed" string="Make Borrowed" type="object"/>
                 <button name="make_lost" string="Make Lost" type="object"/>
-                <field name="state" widget="statusbar"/>
-                <button name="log_all_library_members" string="Log Members" type="object" />
+                <button name="log_all_library_members" string="Log Members" type="object"/>
                 <button name="create_categories" string="Create Categories" type="object"/>
-                <button name="change_release_date" string="Update Date" type="object" />
+                <button name="change_release_date" string="Update Date" type="object"/>
+                <button name="find_book" string="Find Book" type="object"/>
+                <button name="filter_books" string="Filter Book " type="object"/>
+                <button name="mapped_books" string="Mapped authors " type="object"/>
+                <field name="state" widget="statusbar"/>
                 <group>
                     <group>
                         <field name="name"/>
                         <field name="author_ids" widget="many2many_tags"/>
+                        <field name="cost_price" />
                         <field name="state"/>
                         <field name="pages"/>
                         <field name="notes"/>
@@ -35,6 +39,8 @@
                     <group>
                         <field name="short_name"/>
                         <field name="date_release"/>
+                        <field name="category_id"/>
+                        <field name="isbn" />
                         <field name="date_updated"/>
                         <field name="cover" widget="image" class="oe_avatar"/>
                         <field name="reader_rating"/>
@@ -42,13 +48,12 @@
                 </group>
                 <group>
                     <field name="description"/>
-                    <field name="manager_remarks" />
+                    <field name="manager_remarks"/>
                 </group>
             </form>
         </field>
-
     </record>
-    <!--        Adding custom tree view-->
+    <!-- Adding custom tree view -->
     <record id="library_book_view_tree" model="ir.ui.view">
         <field name="name">Library Book List</field>
         <field name="model">library.book</field>
@@ -59,7 +64,7 @@
             </tree>
         </field>
     </record>
-    <!--    Custom search option-->
+    <!-- Custom search option -->
     <record id="library_book_view_search" model="ir.ui.view">
         <field name="name">Library Book Search</field>
         <field name="model">library.book</field>

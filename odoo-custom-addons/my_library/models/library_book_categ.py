@@ -6,6 +6,8 @@ from odoo.exceptions import ValidationError
 
 class LibraryBookCategory(models.Model):
     _name = 'library.book.category'
+    _parent_store = True
+    _parent_name = "parent_id"  # optional if field is 'parent_id'
     name = fields.Char('Category')
     description = fields.Text('Description')
     parent_id = fields.Many2one(
@@ -20,29 +22,8 @@ class LibraryBookCategory(models.Model):
         string='Child Categories'
     )
     # special hierarchy support
-    _parent_store = True
-    _parent_name = "parent_id"  # optional if field is 'parent_id'
-    parent_path = fields.Char(index=True)
 
-    # creating a new record
-    def create_categories(self):
-        categ1 = {
-            'name': 'Child Category 1',
-            'description': 'Description for child 1'
-        }
-        categ2 = {
-            'name': 'Child category 2',
-            'description': 'Description for child 2'
-        }
-        parent_category_val = {
-            'name': 'Parent category',
-            'email': 'Description for parent category',
-            'child_ids': [
-                (0, 0, categ1),
-                (0, 0, categ2),
-            ]
-        }
-        record = self.env['library.book.category'].create(parent_category_val)
+    parent_path = fields.Char(index=True)
 
     @api.constrains('parent_id')
     def _check_hierarchy(self):
@@ -50,7 +31,5 @@ class LibraryBookCategory(models.Model):
             raise models.validationError(
                 'Error! You cannot create recursive categories'
             )
-
-
 
     # add menus, view and security rules inorder to display he library.book.category model in the user interface
