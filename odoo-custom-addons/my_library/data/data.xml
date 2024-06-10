@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-    <record id="base.main_company" model="res.company">
-        <field name="name">Packt publishing</field>
-    </record>
-
-    <record id="book_cookbook" model="library.book">
-        <field name="name">Odoo 14 Development Cookbook</field>
-        <field name="short_name">Odoo Cookbook</field>
-    </record>
-
+<odoo noupdate="1">
     <record id="res_partner_packt" model="res.partner">
         <field name="name">Packt Publishing</field>
         <field name="city">Birmingham</field>
-        <field name="country_id" ref="base.uk"/>
+        <field name="country_id" ref="base.uk" />
     </record>
 
+    <record id="book_category_all" model="library.book.category" forcecreate="False">
+        <field name="name">All books</field>
+    </record>
 </odoo>
