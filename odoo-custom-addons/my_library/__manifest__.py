@@ -26,6 +26,7 @@ Long description of module's purpose
         'security/groups.xml',
         'security/ir.model.access.csv',
         'views/library_book.xml',
+        'views/library_book_categ.xml',
         'views/views.xml',
         'views/templates.xml',
     ],
