@@ -309,15 +309,13 @@ class ResPartner(models.Model):
             r.count_books = len(r.authored_book_ids)
 
     def name_get(self):
-        """ This method used to customize display name of the record """
         result = []
         for book in self:
             authors = book.author_ids.mapped('name')
-            name = "%s (%s)" % (book.name, ','.join(authors))
-            result.append(book.id, name)
+            name = '%s (%s)' % (book.name, ', '.join(authors))
+            result.append((book.id, name))
         return result
 
-    # how the user searches for a book
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
         args = [] if args is None else args.copy()
@@ -327,10 +325,9 @@ class ResPartner(models.Model):
                      ('isbn', operator, name),
                      ('author_ids.name', operator, name)
                      ]
-            return super(LibraryBook, self)._name_search(
-                name=name, args=args, operator=operator,
-                limit=limit, name_get_uid=name_get_uid
-            )
+        return super(LibraryBook, self)._name_search(
+            name=name, args=args, operator=operator,
+            limit=limit, name_get_uid=name_get_uid)
 
     # extracting grouped results using read_group()
     def grouped_data(self):
