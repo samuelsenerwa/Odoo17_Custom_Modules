@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Book Form view inherit -->
+
+    <!-- Book Form View inherit -->
     <record id="library_book_view_form_inh" model="ir.ui.view">
         <field name="name">Library Book Form</field>
         <field name="model">library.book</field>
@@ -11,6 +12,7 @@
             </field>
         </field>
     </record>
+
 
     <!-- Book Category Form View inherit -->
     <record id="library_book_category_view_form_inh" model="ir.ui.view">
@@ -23,4 +25,6 @@
             </field>
         </field>
     </record>
+
+
 </odoo>

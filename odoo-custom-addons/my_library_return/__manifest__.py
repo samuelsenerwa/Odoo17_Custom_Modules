@@ -6,7 +6,7 @@
     'website': "http://www.example.com",
     'category': 'Uncategorized',
     'version': '12.0.1',
-    'depends': ['my_library'],
+    'depends': ['base', 'my_library'],
     'data': [
         'views/library_book.xml',
     ],
@@ -14,4 +14,6 @@
     # 'demo': [
     #     'demo.xml'
     # ],
+    'installable': True,
+    'application': True,
 }

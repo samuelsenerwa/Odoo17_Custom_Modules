@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-
-from odoo import models, fields
 from datetime import timedelta
+from odoo import models, fields
 
 
 class LibraryBook(models.Model):
@@ -20,10 +19,9 @@ class LibraryBook(models.Model):
 
 
 class LibraryBookCategory(models.Model):
-    _inherit = 'library.book.categ'
+    _inherit = 'library.book.category'
 
     max_borrow_days = fields.Integer(
         'Maximum borrow days',
         help="For how many days book can be borrowed",
-        default=10
-    )
+        default=10)
