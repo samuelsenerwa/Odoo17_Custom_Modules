@@ -22,4 +22,6 @@
 
     <!-- To delete multiple records in batch you can use search option -->
     <!-- <delete model="library.book.category" search="[('name', 'ilike', 'Test Category')]"/> -->
+
+    <function model="library.book" name="update_book_price" />
 </odoo>

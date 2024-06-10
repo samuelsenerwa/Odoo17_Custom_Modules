@@ -286,6 +286,15 @@ class LibraryBook(models.Model):
                 )
         return super(LibraryBook, self).write(values)
 
+#     update book price
+    @api.model
+    def update_book_price(self):
+        """ In real cases this can be really complex but here we just increase cost by 10 """
+        logger.info('Method update_book_price called from XML')
+        all_books = self.search([])
+        for book in all_books:
+            book.cost_price += 10
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
