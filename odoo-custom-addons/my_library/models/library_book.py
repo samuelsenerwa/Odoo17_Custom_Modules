@@ -243,7 +243,9 @@ class LibraryBook(models.Model):
 
     publisher_id = fields.Many2one(
         'res.partner', string='Publisher',
-        ondelete='set null'
+        ondelete='set null',
+        context={},
+        domain=[],
     )
     publisher_city = fields.Char(
         'Publisher City',
@@ -307,6 +309,7 @@ class ResPartner(models.Model):
             r.count_books = len(r.authored_book_ids)
 
     def name_get(self):
+        """ This method used to customize display name of the record """
         result = []
         for book in self:
             authors = book.author_ids.mapped('name')
