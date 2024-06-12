@@ -27,14 +27,15 @@ Long description of module's purpose
         'security/ir.model.access.csv',
         'views/library_book.xml',
         'views/library_book_categ.xml',
+        'views/library_book_rent.xml',
         'data/data.xml',
         'views/views.xml',
         'views/templates.xml',
 
     ],
     # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+    # 'demo': [
+    #     'demo/demo.xml',
+    # ],
     'application': True,
 }
