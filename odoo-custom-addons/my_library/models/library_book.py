@@ -48,6 +48,7 @@ class LibraryBook(models.Model):
     old_edition = fields.Many2one('res.partner', string="Authors")
     short_name = fields.Char('Short Title', translate=True, index=True, required=True)
     date_release = fields.Date('Release Date')
+    active = fields.Boolean(default=True)
     date_updated = fields.Datetime('Last Updated')
     pages = fields.Integer('Number of Pages',
                            groups='base.group_user',
@@ -120,7 +121,43 @@ class LibraryBook(models.Model):
         self.change_state('borrowed')
 
     def make_lost(self):
-        self.change_state('lost')
+        self.ensure_one()
+        self.state = 'lost'
+        # self.change_state('lost')
+        if not self.env.context.get('avoid_deactivate'):
+            self.active = False
+
+    def book_rent(self):
+        """If you wish to rent as superuser. it's not usually advisable to use sudo()
+        """
+        self.ensure_one()
+        if self.state != 'available':
+            raise UserError(_('Book is not available for renting'))
+        rent_as_superuser = self.env['library.book.rent'].sudo()
+        rent_as_superuser.create({
+            'book_id': self.id,
+            'borrower_id': self.env.user.partner_id.id,
+        })
+
+    # executing RAW SQL queries
+
+    def average_book_occupation(self):
+        self.flush()
+        sql_query = """
+                SELECT
+                lb.name,
+                avg((EXTRACT(epoch from age(return_date, rent_date)) / 86400))::int
+                FROM
+                library_book_rent AS lbr
+                JOIN
+                library_book as lb ON lb.id = lbr.book.id
+                WHERE lbr.state = 'returned'
+                GROUP BY lb.name;
+        """
+        self.env.cr.execute(sql_query)
+        result = self.env.cr.fetchall()
+        logger.info("Average book occupation: %s", result)
+        self.invalidate_cache()  # invalidate cache
 
     # using try...cache block
     def post_to_webservice(self, data):
@@ -286,7 +323,7 @@ class LibraryBook(models.Model):
                 )
         return super(LibraryBook, self).write(values)
 
-#     update book price
+    #     update book price
     @api.model
     def update_book_price(self):
         """ In real cases this can be really complex but here we just increase cost by 10 """
