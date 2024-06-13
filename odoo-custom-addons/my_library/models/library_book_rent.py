@@ -5,6 +5,7 @@ class LibraryBookRent(models.Model):
     _name = 'library.book.rent'
 
     book_id = fields.Many2one('library.book', 'Book', required=True)
+    # book_ids = fields.Many2one('library.book', 'Book', required=True)
     borrower_id = fields.Many2one('res.partner', 'Borrower', required=True)
     state = fields.Selection([('ongoing', 'Ongoing'),
                               ('returned', 'Returned'),
@@ -35,4 +36,3 @@ class LibraryBookRent(models.Model):
         self.ensure_one()
         self.sudo().state = 'lost'
         book_with_different_context = self.book_id.with_context(avoid_deactivate=True)
-        book_with_different_context.sudo().make_lost()
