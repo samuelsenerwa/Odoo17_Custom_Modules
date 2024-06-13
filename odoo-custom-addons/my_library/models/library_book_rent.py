@@ -5,6 +5,7 @@ class LibraryBookRent(models.Model):
     _name = 'library.book.rent'
 
     book_id = fields.Many2one('library.book', 'Book', required=True)
+    # book_ids = fields.Many2one('library.book', 'Book', required=True)
     borrower_id = fields.Many2one('res.partner', 'Borrower', required=True)
     state = fields.Selection([('ongoing', 'Ongoing'),
                               ('returned', 'Returned'),
