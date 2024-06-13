@@ -19,6 +19,7 @@
                     <button name="book_return" string="Return the Book" type="object"
                             invisible="state != 'ongoing'"
                             />
+                    <button name="book_lost" string="Lost the Book" state="ongoing" type="object" />
                     <field name="state" widget="statusbar" readonly="1"/>
                 </header>
                 <sheet>
