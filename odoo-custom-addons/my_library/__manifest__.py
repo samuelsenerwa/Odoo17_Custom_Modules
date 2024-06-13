@@ -29,7 +29,6 @@ Long description of module's purpose
         'views/library_book_categ.xml',
         'views/library_book_rent.xml',
         'wizard/library_book_rent_wizard.xml',
-        'wizard/library_book_return_wizard.xml',
         'data/data.xml',
         'views/views.xml',
         'views/templates.xml',
