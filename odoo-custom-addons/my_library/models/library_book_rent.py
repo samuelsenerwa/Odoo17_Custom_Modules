@@ -36,3 +36,4 @@ class LibraryBookRent(models.Model):
         self.ensure_one()
         self.sudo().state = 'lost'
         book_with_different_context = self.book_id.with_context(avoid_deactivate=True)
+        book_with_different_context.sudo().make_lost()

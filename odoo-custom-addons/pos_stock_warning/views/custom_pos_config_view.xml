@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!--Custom POS Config View-->
+
+	   <record model="ir.ui.view" id="custom_pos_config_extended_form_view">
+			<field name="name">pos.config.form.extended.view</field>
+			<field name="model">pos.config</field>
+			<field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//div[4]" position="after">
+					<br/>
+					<h2>Stock Configuration in POS</h2>
+					<div class="row mt16 o_settings_container">
+						<div class="col-xs-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="pos_display_stock"/>
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="pos_display_stock"/>
+								<div class="text-muted">
+									Check this to display stock in pos screen.
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6 o_setting_box">
+							<div class="o_setting_right_pane">
+								<label for="pos_stock_type" string="Stock Type"/>
+								<div class="text-muted">
+									Stock type show up in POS screen.
+								</div>
+								<div class="content-group mt16">
+									<field name="pos_stock_type"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="pos_allow_order"/>
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="pos_allow_order"/>
+								<div class="text-muted">
+									Allow pos order when product is out of stock stock.
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6 o_setting_box">
+							<div class="o_setting_right_pane">
+								<label for="pos_deny_order" string="Deny pos order"/>
+								<div class="text-muted">
+									Deny pos order when product quanity goes down to the entered quantity.
+								</div>
+								<div class="content-group mt16">
+									<field name="pos_deny_order"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br/>
+
+					<h2>Stock Location Configuration</h2>
+					<div class="row mt16 o_settings_container">
+
+						<div class="col-xs-12 col-md-6 o_setting_box" id="stock_location">
+							<div class="o_setting_right_pane">
+								<label for="show_stock_location"/>
+								<div class="text-muted">
+									Product stock location type
+								</div>
+								<div class="content-group">
+									<div class="mt16">
+										<field name="show_stock_location" class="o_light_label" widget="radio"/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6 o_setting_box">
+							<div class="o_setting_right_pane">
+								<label for="stock_location_id"/>
+								<div class="text-muted">
+									Stock location used for inventory
+								</div>
+								<div class="content-group mt16">
+									<field name="stock_location_id"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br/>
+				</xpath>
+			</field>
+	   </record>
+
+
+	</data>
+</odoo>
