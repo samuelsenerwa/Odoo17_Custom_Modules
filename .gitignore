@@ -1,0 +1,49 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Ignore virtual environment directories
+venv/
+env/
+ENV/
+.venv/
+.pyenv/
+
+# Ignore various IDE directories
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore compiled C extensions
+*.so
+
+# Ignore logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+# Ignore pytest cache
+.pytest_cache/
+
+# Ignore mypy cache
+.mypy_cache/
+
+# Ignore any other files you don't want to track
+*.swp
+*.bak
+*.tmp
