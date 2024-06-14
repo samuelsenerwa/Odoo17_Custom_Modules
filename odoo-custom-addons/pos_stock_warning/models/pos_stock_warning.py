@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api, _
-from odoo.exceptions import Warning
+# from odoo.exceptions import Warning
 import random
 from odoo.tools import float_is_zero
 from datetime import date, datetime
