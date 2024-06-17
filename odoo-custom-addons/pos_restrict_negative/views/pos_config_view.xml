@@ -10,16 +10,41 @@
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
                             <field name="restrict_zero_qty"/>
-                            <field name="stock_location_id"/>
+<!--                            <field name="stock_location_id"/>-->
                         </div>
                         <div class="o_setting_right_pane row mt16">
                             <label for="restrict_zero_qty" string="Restrict Zero Quantity"/>
                             <div class="text-muted">
                                 Zero Quantity Product Validation
                             </div>
-                            <label for="stock_location_id" string="Stock Location" class="col-lg-3 o_light_label"/>
+                            <!--                            <label for="stock_location_id" string="Stock Location" class="o_light_label"/>-->
+                            <!--                            <div class="text-muted">-->
+                            <!--                                Select the stock location for this POS session.-->
+                            <!--                            </div>-->
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="stock_location_id"/>
                             <div class="text-muted">
-                                Select the stock location for this POS session.
+                                Stock location used for inventory
+                            </div>
+                            <div class="content-group mt16">
+                                <field name="stock_location_id"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="pos_stock_type" string="Stock Type"/>
+                            <div class="text-muted">
+                                Stock type show up in POS screen.
+                            </div>
+                            <div class="content-group mt16">
+                                <field name="pos_stock_type"/>
                             </div>
                         </div>
                     </div>

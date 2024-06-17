@@ -1,5 +1,9 @@
 # pos_session.py
 from odoo import models, api, _
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
@@ -23,6 +27,7 @@ class PosSession(models.Model):
         result.update({
             'product_quantities': quantities,
         })
+        _logger.info("Product Quantities: %s", quantities)
         return result
 
     def _get_product_quantities(self, products, locations):
