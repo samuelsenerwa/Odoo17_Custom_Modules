@@ -26,7 +26,9 @@ class PosSession(models.Model):
         quantities = self._get_product_quantities(products, locations)
         result.update({
             'product_quantities': quantities,
+            'stock_location_id': locations.ids if locations else [],
         })
+        _logger.info(f"Stock Location IDs sent to frontend: {locations.ids}")
         _logger.info("Product Quantities: %s", quantities)
         return result
 

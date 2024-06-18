@@ -24,7 +24,9 @@
         # 'security/ir.model.access.csv',
         'views/pos_config_view.xml',
     ],
+    'qweb': [],
     'assets': {
+        'web.assets_tests': [],
         'point_of_sale._assets_pos': [
             'pos_restrict_negative/static/src/app/models/models.js',
         ],
