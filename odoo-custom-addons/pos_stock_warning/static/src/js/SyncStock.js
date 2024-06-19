@@ -1,5 +1,6 @@
 odoo.define('pos_stock_warning.SyncStock', function(require) {
 	'use strict';
+    console.log("pos_stock_warning.SyncStock loaded")
 
 	const PosComponent = require('point_of_sale.PosComponent');
 	const Registries = require('point_of_sale.Registries');

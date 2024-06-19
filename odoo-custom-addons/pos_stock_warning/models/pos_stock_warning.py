@@ -6,6 +6,9 @@ import random
 from odoo.tools import float_is_zero
 from datetime import date, datetime
 from odoo.exceptions import UserError, ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class pos_config(models.Model):
@@ -78,6 +81,7 @@ class stock_quant(models.Model):
         return [res]
 
     def get_single_product(self, product, location):
+        _logger.info(f"get_single_product called with product: {product}, location: {location}")
         res = []
         pro = self.env['product.product'].browse(product)
         quants = self.env['stock.quant'].search([('product_id', '=', pro.id), ('location_id', '=', location)])
@@ -88,6 +92,7 @@ class stock_quant(models.Model):
             res.append([pro.id, quantity])
         else:
             res.append([pro.id, quants.quantity])
+            _logger.info(f"get_single_product result: {res}")
         return res
 
 

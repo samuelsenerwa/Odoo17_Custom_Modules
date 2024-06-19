@@ -12,6 +12,7 @@ odoo.define('pos_stock_warning.productScreen', function(require) {
 			async _clickProduct(event) {
 				let self = this;
 				const product = event.detail;
+				console.log("Product clicked:", product);
 				let allow_order = self.env.pos.config.pos_allow_order;
 				let deny_order= self.env.pos.config.pos_deny_order;
 				let call_super = true;
@@ -22,11 +23,13 @@ odoo.define('pos_stock_warning.productScreen', function(require) {
 						var partner_id = self.env.pos.get_client();
 						debugger;
 						var location = self.env.pos.config.stock_location_id;
+						 console.log("Making RPC call to get_single_product");
 						await this.rpc({
 							model: 'stock.quant',
 							method: 'get_single_product',
 							args: [partner_id ? partner_id.id : 0,product.id, location[0]],
 						}).then(function(output) {
+						console.log("RPC output:", output);
 							if (allow_order == false)
 							{
 								if ( (output[0][1] <= deny_order) || (output[0][1] <= 0) )
@@ -106,11 +109,13 @@ odoo.define('pos_stock_warning.productScreen', function(require) {
 								prods.push(line.product.id)
 							}
 						});
+						  console.log("Making RPC call to get_products_stock_location_qty");
 						await this.rpc({
 							model: 'stock.quant',
 							method: 'get_products_stock_location_qty',
 							args: [partner_id ? partner_id.id : 0, location[0],prods],
 						}).then(function(output) {
+						console.log("RPC output:", output);
 							var flag = 0;
 							for (var i = 0; i < lines.length; i++) {
 								for (var j = 0; j < output.length; j++) {

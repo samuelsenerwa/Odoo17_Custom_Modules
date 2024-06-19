@@ -1,5 +1,6 @@
 odoo.define('pos_stock_warning.ReceiptScreen', function(require) {
 	"use strict";
+	console.log("pos_stock_warning.ReceiptScreen loaded");
 
 	const Registries = require('point_of_sale.Registries');
 	const ReceiptScreen = require('point_of_sale.ReceiptScreen');

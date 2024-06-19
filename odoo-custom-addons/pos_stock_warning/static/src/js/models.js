@@ -1,5 +1,6 @@
 odoo.define('pos_stock_warning.pos', function(require) {
 	"use strict";
+    console.log("pos_stock_warning.pos loaded");
 
 	const models = require('point_of_sale.models');
 

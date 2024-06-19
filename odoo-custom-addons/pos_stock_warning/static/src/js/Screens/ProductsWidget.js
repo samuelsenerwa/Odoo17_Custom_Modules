@@ -1,5 +1,6 @@
 odoo.define('pos_stock_warning.ProductsWidget', function(require) {
 	"use strict";
+	console.log("pos_stock_warning.ProductsWidget loaded");
 
 	const Registries = require('point_of_sale.Registries');
 	// const PosComponent = require('point_of_sale.PosComponent');
