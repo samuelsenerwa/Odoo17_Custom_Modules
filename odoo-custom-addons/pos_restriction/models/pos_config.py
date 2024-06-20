@@ -95,3 +95,30 @@ class stock_quant(models.Model):
         else:
             res.append([pro.id, quants.quantity])
         return res
+
+
+# calculate the on hand quantity and available quantity
+class product(models.Model):
+    _inherit = 'product.product'
+
+    quantity_on_hand = fields.Float('Quantity on Hand')
+    available_quantity = fields.Float('Available Quantity')
+
+    def get_stock_location_avail_qty(self, location, products):
+        res = {}
+        product_ids = self.env['product.product'].browse(products)
+        if location:
+            for product in product_ids.filtered(lambda x: x.company_id == self.env.user.company_id):
+                quants = self.env['stock_quant'].search(
+                    [('product_id', '=', product.id),
+                     ('location_id', '=', location),
+                     ('company_id', '=', self.env.user.company_id.id)
+                     ])
+
+                qty = sum(quants.mapped('quantity'))
+
+                product.quantity_on_hand = qty
+                # product.available_quantity = qty
+                res.update({product.id: qty})
+
+        return [res]
