@@ -18,7 +18,7 @@ Long description of module's purpose
     'version': '14.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'web'],
 
     # always loaded
     'data': [
