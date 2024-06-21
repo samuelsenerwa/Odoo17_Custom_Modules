@@ -5,7 +5,7 @@
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
     'description': """
-Long description of module's purpose
+    Long description of module's purpose
     """,
 
     'author': "My Company",
@@ -18,7 +18,7 @@ Long description of module's purpose
     'version': '17.0.1.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['point_of_sale'],
+    'depends': ['base', 'point_of_sale'],
 
     "assets": {
         "point_of_sale._assets_pos":[

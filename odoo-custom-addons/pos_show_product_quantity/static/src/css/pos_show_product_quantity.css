@@ -1,0 +1,14 @@
+.popup-error .danger {
+    font-size:13px;
+    color:red;
+}
+
+.pos .product-list .product-quantity-tag {
+    padding:0.5rem;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: lightgrey;
+    border-radius: 10px 0 0 0;
+}
