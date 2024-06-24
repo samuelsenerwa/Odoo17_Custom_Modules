@@ -17,7 +17,7 @@ odoo.define('pos_demo.custom', function (require) {
     PosProductScreen.addControlButton({
         component: PosDiscountButton,
         condition: function() {
-        return true;
+            return this.env.pos.config.module_pos_discount;
         },
     });
     Registries.Component.add(PosDiscountButton);
