@@ -9,4 +9,11 @@
             <span>Discount</span>
         </span>
     </t>
+    <t t-name="PosLastOrderButton" owl="1">
+        <span class="control-button" t-on-click="onClick">
+            <i class="fa fa-shopping-cart"></i>
+            <span></span>
+            <span>Last Orders</span>
+        </span>
+    </t>
 </templates>
