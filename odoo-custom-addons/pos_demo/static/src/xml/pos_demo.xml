@@ -16,4 +16,13 @@
             <span>Last Orders</span>
         </span>
     </t>
+
+    <t t-name="ProductItem" t-inherit="point_of_sale.ProductItem" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('price-tag')]" position="after">
+            <span t-if="props.product.standard_price" class="sale_margin">
+                <t t-set="margin" t-value="props.product.get_price(pricelist, 1) - props.product.standard_price" />
+                <t t-esc="env.pos.format_currency(margin)"/>
+            </span>
+        </xpath>
+    </t>
 </templates>
