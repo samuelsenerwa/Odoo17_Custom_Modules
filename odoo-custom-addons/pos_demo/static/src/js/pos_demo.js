@@ -13,7 +13,7 @@ odoo.define('pos_demo.custom', function (require) {
         async onClick() {
         const order = this.env.pos.get_order();
         if(order.selected_orderline) {
-        order.selected_orderline.set_discount(5);
+             order.selected_orderline.set_discount(5);
             }
         }
     }
