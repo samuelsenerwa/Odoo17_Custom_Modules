@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="mask_pin.list">
+      <field name="name">mask_pin list</field>
+      <field name="model">mask_pin.mask_pin</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="mask_pin.action_window">
+      <field name="name">mask_pin window</field>
+      <field name="res_model">mask_pin.mask_pin</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="mask_pin.action_server">
+      <field name="name">mask_pin server</field>
+      <field name="model_id" ref="model_mask_pin_mask_pin"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="mask_pin" id="mask_pin.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="mask_pin.menu_1" parent="mask_pin.menu_root"/>
+    <menuitem name="Menu 2" id="mask_pin.menu_2" parent="mask_pin.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="mask_pin.menu_1_list" parent="mask_pin.menu_1"
+              action="mask_pin.action_window"/>
+    <menuitem name="Server to list" id="mask_pin" parent="mask_pin.menu_2"
+              action="mask_pin.action_server"/>
+-->
+  </data>
+</odoo>

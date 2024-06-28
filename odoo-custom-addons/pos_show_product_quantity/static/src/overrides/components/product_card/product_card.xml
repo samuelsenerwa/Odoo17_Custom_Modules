@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension" owl="1">
+        <xpath expr="//article" position="inside">
+            <div class="product-quantity-tag">
+                <t t-esc="prods.qty" />
+            </div>
+        </xpath>
+            </t>
+</templates>

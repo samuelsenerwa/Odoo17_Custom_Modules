@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ProductsWidget" t-inherit-mode="extension">
+        <ProductCard position="attributes">
+            <attribute name="qty">product.pos_qty_available</attribute>
+        </ProductCard>
+    </t>
+</templates>
