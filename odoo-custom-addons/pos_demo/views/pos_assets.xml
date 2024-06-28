@@ -4,6 +4,7 @@
         <template id="assets_backend" inherit_id="point_of_sale.assets">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/pos_demo/static/src/js/pos_demo.js"/>
+                 <script type="text/javascript" src="/pos_demo/static/src/js/pos_receipt.js"/>
                 <link rel="stylesheet" href="/pos_demo/static/src/scss/pos_demo.scss"/>
             </xpath>
         </template>
