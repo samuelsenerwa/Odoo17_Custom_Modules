@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_equipment_parts_lineuser,equipment.parts.line.user,model_equipment_parts_line,hr.group_hr_user,1,0,0,0
+access_hr_equipment_parts_line_emp,equipment.parts.line.emp,model_equipment_parts_line,base.group_user,1,0,0,0
+access_equipment_parts_line_admin_user,equipment.parts.line.admin.user,model_equipment_parts_line,maintenance.group_equipment_manager,1,1,1,1
+access_purchase.requisition_admin_user,purchase.requisition.admin.user,purchase_requisition.model_purchase_requisition,maintenance.group_equipment_manager,1,1,1,0
+access_pr_line_eq_manager,purchase.requisition.line.eq.manager,purchase_requisition.model_purchase_requisition_line,maintenance.group_equipment_manager,1,1,1,0
+access_stock_picking_admin_user,stock.picking.admin.user1,stock.model_stock_picking,maintenance.group_equipment_manager,1,1,1,0
+access_stock_move_admin_user,stock.move.admin.user,stock.model_stock_move,maintenance.group_equipment_manager,1,1,1,0

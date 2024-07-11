@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_department_inherits_add_location_custom" model="ir.ui.view">
+            <field name="name">hr.department.form.inherits</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="manager_id" position="after">
+                        <field name="custom_location_id" groups="hr.group_hr_manager"/>
+                    </field>
+                </data>
+            </field>
+         </record>
+
+         <record model="ir.actions.act_window" id="action_internal_transfer_tree_custom">
+            <field name="context">{}</field>
+            <field name="domain">[('custom_equipment_request_id','in',active_ids)]</field>
+            <field name="name">Internal Transfer</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_id" ref="stock.vpicktree"/>
+        </record>
+        <record model="ir.actions.act_window" id="action_po_tree_custom">
+            <field name="context">{}</field>
+            <field name="domain">[('custom_equipment_request_id','in',active_ids)]</field>
+            <field name="name">Purchase Requisition</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_id" ref="purchase_requisition.view_purchase_requisition_tree"/>
+        </record>
+
+        <record id="view_hr_equipment_request_stock_custom" model="ir.ui.view">
+            <field name="name">maintenance.request.form.stock</field>
+            <field name="model">maintenance.request</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <!-- <xpath expr="//form/sheet/field[@name='description']" position="replace"/> -->
+                    <xpath expr="//button[@name='archive_equipment_request']" position="before">
+                        <button name="create_equipment_move_custom" type="object" string="Create Equipment Move" class="btn-primary"/>
+                    </xpath>
+
+                    <xpath expr="//form/sheet/group" position="before">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="%(action_internal_transfer_tree_custom)d"
+                                type="action" icon="fa-refresh" 
+                                groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager" string="Internal Transfers" />
+                            <button class="oe_stat_button" name="%(action_po_tree_custom)d" 
+                                type="action" icon="fa-shopping-cart"
+                                groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager" string="Purchase"/>
+                        </div>
+                    </xpath>
+                    <xpath expr="//form/sheet" position="inside">
+
+                    <notebook>
+                    <page string="Operation">
+                        <separator string="Maintenance Lines" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager" />
+                        <button class="oe_highlight" string="Compute" name="parts_operation" type="object"   groups="maintenance.group_equipment_manager,stock.group_stock_manager"/>
+                        <field name="custom_needed_parts" nolable='1' groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager">
+                            <tree editable="top">
+                                <field name="product_id"/>
+                                <field name="qty"/>
+                                <field name="product_stock" />
+                                <field name="compute_done" readonly='1' invisible='1'/>
+                            </tree>
+                        </field>
+                        <separator string="Related Purchase Requisitions" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <button class="oe_highlight" string="Create Purchase Requisition" name="create_purchase_requisition" type="object" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <field name="custom_equipment_line1" nolable='1' groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager">
+                            <tree editable="top">
+                                <field name="product_id"/>
+                                <field name="qty"/>
+                            </tree>
+                        </field>
+                        <separator string="Related Internal Transfers" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <button class="oe_highlight" string="Create Internal Move" name="create_picking" type="object"  groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <field name="custom_equipment_line2" nolable='1' groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager">
+                            <tree editable="top">
+                                <field name="product_id"/>
+                                <field name="qty"/>
+                            </tree>
+                        </field>
+                        <!-- <field name='description' placeholder="Internal Note ......."/> -->
+                        </page>
+                        </notebook>
+                    </xpath>
+                    <field name="equipment_id" position="after">
+                        <field name='product_id'/>
+                        <field name='equipment_picking_type_id'/>
+                    </field>
+
+                    <field name="user_id" position="after">
+                        <field name="custom_location_id" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <field name="custom_source_location_id" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <field name="custom_maintainer_location_id" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <field name="maintenance_picking_type_id" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <field name="purchase_picking_type_id" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager"/>
+                        <field name="custom_move_done" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager" invisible="1" />
+                        <field name="custom_po_done" groups="maintenance.group_equipment_manager,purchase.group_purchase_manager,stock.group_stock_manager" invisible="1" />
+                    </field>
+                </data>
+            </field>
+        </record>
+        
+        
+    </data>
+</openerp>
