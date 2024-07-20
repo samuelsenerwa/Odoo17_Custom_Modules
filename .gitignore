@@ -23,6 +23,7 @@ ENV/
 
 # Ignore compiled C extensions
 *.so
+*.conf
 
 # Ignore logs and databases
 *.log
