@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, AccessError
 class HrEquipmentRequest(models.Model):
     _inherit = 'maintenance.request' #inherit maintenance request module
 
+    # when handling internal transfers
     def _get_picking_in_custom(self):
         pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
         company = self.env.company
@@ -20,6 +21,7 @@ class HrEquipmentRequest(models.Model):
             )
         return pick_in
 
+    # selecting picking type of the selected equipment by the user
     @api.model
     def _get_equipment_picking_type(self):
         type_obj = self.env['stock.picking.type']
@@ -42,6 +44,7 @@ class HrEquipmentRequest(models.Model):
     def onchange_employee_id(self):
         self.custom_location_id = self.employee_id.department_id.custom_location_id.id
 
+    # fields referencing the department selection together with the location
     custom_need_po = fields.Boolean(string="Need PO",help="Tick this box if you want to create Purchase Request", defaults=False)
     custom_need_move = fields.Boolean(string="Need Move",help="Tick this box if you want to create Move", defaults=False)
     custom_equipment_line1 = fields.One2many('equipment.parts.line','request_id1', 'Equipment Parts line')
@@ -74,6 +77,7 @@ class HrEquipmentRequest(models.Model):
     )
 
 
+    # handling computing of various opertaion such as confirming if components stock exists
     def parts_operation(self):
         po = []
         transfer = []
@@ -101,7 +105,7 @@ class HrEquipmentRequest(models.Model):
         self.custom_equipment_line2 = transfer
         return True
 
-    # @api.multi #odoo13
+    # user can be able to create a purchase requisition
     def create_purchase_requisition(self):
         partlist = []
         
