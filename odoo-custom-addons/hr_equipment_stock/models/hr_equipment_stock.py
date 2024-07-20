@@ -5,7 +5,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, AccessError
-from odoo.exceptions import Warning
+# from odoo.exceptions import Warning
 
 class HrEquipmentRequest(models.Model):
     _inherit = 'maintenance.request'
