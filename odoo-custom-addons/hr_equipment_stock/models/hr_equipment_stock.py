@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, AccessError
 # from odoo.exceptions import Warning
 
 class HrEquipmentRequest(models.Model):
-    _inherit = 'maintenance.request'
+    _inherit = 'maintenance.request' #inherit maintenance request module
 
     def _get_picking_in_custom(self):
         pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
