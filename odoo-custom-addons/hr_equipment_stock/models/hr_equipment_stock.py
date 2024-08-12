@@ -50,19 +50,19 @@ class HrEquipmentRequest(models.Model):
     custom_equipment_line1 = fields.One2many('equipment.parts.line','request_id1', 'Equipment Parts line')
     custom_equipment_line2 = fields.One2many('equipment.parts.line','request_id2', 'Equipment Parts line')
     custom_needed_parts = fields.One2many('equipment.parts.line','request_id3', 'Needed Parts')
-    custom_location_id = fields.Many2one('stock.location','Department Location')
+    custom_location_id = fields.Many2one('stock.location','Maintenance Location')
     custom_source_location_id = fields.Many2one('stock.location','Source Location for Internal Move')
     maintenance_picking_type_id = fields.Many2one(
         'stock.picking.type',
         'Maintenance Picking Type',
         default=_get_picking_type,
     )
-    custom_maintainer_location_id = fields.Many2one('stock.location','Equipment Repair Location')
+    custom_maintainer_location_id = fields.Many2one('stock.location','Repair Location')
     custom_move_done = fields.Boolean()
     custom_po_done = fields.Boolean()
     product_id = fields.Many2one(
         'product.product',
-        'Equipment Product'
+        'Consumable'
     )
     equipment_picking_type_id = fields.Many2one(
         'stock.picking.type',
@@ -158,7 +158,7 @@ class HrEquipmentRequest(models.Model):
         if not self.custom_maintainer_location_id:
             raise UserError(_("Please choose Maintainer Location."))
         if not self.custom_location_id:
-            raise UserError(_("Please select Department Location."))
+            raise UserError(_("Please select Maintenance Location."))
         return {
             'picking_type_id': self.equipment_picking_type_id.id,
             'partner_id': self.user_id.id,
@@ -292,7 +292,7 @@ class hr_department(models.Model):
 
     custom_location_id = fields.Many2one(
         'stock.location',
-        'Department Location',
+        'Maintenance Location',
         company_dependent=True,
         domain="[('company_id', '=', current_company_id)]",
      )
