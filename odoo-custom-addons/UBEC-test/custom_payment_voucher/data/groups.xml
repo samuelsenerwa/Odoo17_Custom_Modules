@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="group_payment_voucher_preparer" model="res.groups">
+        <field name="name">Voucher Preparer</field>
+    </record>
+    <record id="group_payment_voucher_checker" model="res.groups">
+        <field name="name">Voucher Checker</field>
+    </record>
+
+    <record id="group_payment_voucher_authorizer" model="res.groups">
+        <field name="name">Payment Voucher Authorizer</field>
+    </record>
+
+    <record id="group_payment_voucher_certifier" model="res.groups">
+        <field name="name">Payment Voucher Certifier</field>
+    </record>
+    <record id="group_payment_voucher_auditor" model="res.groups">
+        <field name="name">Payment Voucher Auditor</field>
+    </record>
+
+    <record id="group_payment_voucher_cash_office" model="res.groups">
+        <field name="name">Cash Office Group</field>
+    </record>
+
+    <record id="group_payment_voucher_funds_budget" model="res.groups">
+        <field name="name">Funds Budget Group</field>
+    </record>
+
+</odoo>
+
+
+
