@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Report Action & Print Button also-->
+    <record id="action_report_custom_payment_voucher" model="ir.actions.report">
+        <field name="name">Payment Voucher</field>
+        <field name="model">payment.voucher.breakdown</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">custom_payment_voucher.report_payment_voucher</field>
+        <field name="report_file">custom_payment_voucher.report_payment_voucher</field>
+        <field name="print_report_name">'Payment Voucher - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="custom_payment_voucher.model_payment_voucher"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+
+    <template id="custom_sale_external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <t t-call="custom_payment_voucher.report_payment_voucher_header">
+            <t t-out="0"/>
+        </t>
+    </template>
+
+    <template id="report_payment_voucher_header">
+        <div t-attf-class="header o_company_#{company.id}_layout">
+            <table style="width: 100%;border: 0px solid white;  border-collapse: collapse;">
+                <tr style="border-bottom: 2px solid black;">
+                    <!-- Logo cell at center -->
+                    <td style="width: 10%; text-align: center; vertical-align: middle;">
+                        <img t-if="o.company_id.logo" class="o_company_logo_small"
+                             t-att-src="'data:image/png;base64,%s' % o.company_id.logo.decode('utf-8')"
+                             style="max-width: 100px; max-height: 100px;" alt="Logo"/>
+                    </td>
+                    <!-- Text cell aligned to top -->
+                    <td style="width: 80%;  text-align: center; vertical-align: top; padding-left: 10px;">
+                        <!-- <h3 style="margin: 2px 0;">GIFMIS</h3> -->
+                        <h4 style="margin: 2px 0;font-weight: bold;; color: #A52A2A;font-size: 26px;">UNIVERSAL BASIC
+                            EDUCATION COMMISSION (UBEC)
+                        </h4>
+                        <p style="margin: 2px 0;">UBEC Building, No. 7 Gwani Street, Wuse Zone 4, P.M.B. 5086</p>
+                        <h4 style="margin: 2px 0;">FINANCE &amp; ACCOUNT DEPARTMENT</h4>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                                           '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <h2 t-out="layout_document_title"/>
+            <t t-out="0"/>
+        </div>
+
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <div class="o_footer_content d-flex border-top pt-2">
+                <div class="flex-grow-1 text-start me-2"/>
+                <div class="text-end text-muted">
+                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
+                    <div t-if="report_type == 'pdf'">Page
+                        <span class="page"/>
+                        /
+                        <span class="topage"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </template>
+
+    <template id="report_payment_voucher">
+        <t t-call="web.html_container">
+            <t t-call="custom_payment_voucher.custom_sale_external_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="o">
+                        <!-- Header Section -->
+                        <table style="border: white; width: 100%;">
+                            <tr>
+                                <td style="border: none;text-align: left; width: 32%;">
+                                    <p>
+                                        <strong>Document No.:</strong>
+                                        <span t-esc="o.voucher_id.name"/>/
+                                        <span t-esc="o.name"/>
+                                    </p>
+                                    <p>
+                                        <strong>File No:</strong>
+                                        <span t-esc="o.voucher_id.file_no"/>
+                                        <br/>
+                                        <strong>Voucher Ref:</strong>
+                                        <span t-esc="o.voucher_id.voucher_ref"/>
+
+                                    </p>
+                                </td>
+                                <td style="border: none;text-align: left; width: auto;">
+                                    <t t-if="o.voucher_id.projects == 'special'">
+                                        <span style="color: #007bff; font-weight: bold; text-decoration: underline;">
+                                            SPECIAL PROJECT UNIT PAYMENT VOUCHER
+                                        </span>
+                                    </t>
+                                    <t t-elif="o.voucher_id.projects == 'state'">
+                                        <span style="color: #28a745; font-weight: bold; text-decoration: underline;">
+                                            STATE PROJECT UNIT PAYMENT VOUCHER
+                                        </span>
+                                    </t>
+                                    <t t-elif="o.voucher_id.projects == 'expenditure'">
+                                        <span style="color: #dc3545; font-weight: bold; text-decoration: underline;">
+                                            EXPENDITURE UNIT PAYMENT VOUCHER
+                                        </span>
+                                    </t>
+                                </td>
+                                <td style="border: none;text-align: left; width: auto;">
+                                    <p>
+                                        <strong>Date:</strong>
+                                        <t t-if="o.payment_date">
+                                            <span t-esc="o.payment_date.strftime('%d-%m-%Y')"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span>-</span>
+                                        </t>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- Partner & Amount Section -->
+                        <table class="table table-sm" style="border: white; border-collapse: collapse; width: 100%;">
+                            <tr>
+                                <td style="text-align: left; width: 32%;">
+                                    Partner Name:
+                                    <span t-esc="o.partner_id.name"/>
+                                    Address:
+                                    <div t-field="o.partner_id"
+                                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                </td>
+                                <td style="text-align: center; width: auto;">
+                                    Amount in Figures:
+                                    <br/>
+                                    <strong>
+                                        <span t-out="float(o.amount_to_paid or 0)"
+                                              t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                              t-att-style="'color: %s;' % ('green' if o.amount_to_paid > 0 else 'red')"/>
+
+                                    </strong>
+                                    <br/>
+                                    Amount in words:
+                                    <br/>
+                                    <strong class="text-muted lh-sm" style="text-transform: capitalize;">
+                                        <span t-esc="o.currency_id.amount_to_text(o.amount_to_paid)"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- Narration Details -->
+                        <table class="table table-sm" style="border: none; border-collapse: collapse; width: 100%;">
+                            <td colspan="3" style="text-align: left;">
+                                <strong>DETAILS:</strong>
+                                <br/>
+                                <span t-esc="o.voucher_id.purpose"/>
+                            </td>
+                        </table>
+                        <br/>
+                        <!-- Breakdown Table -->
+                        <table style="width:100%; font-size: 12px;">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Account</th>
+                                    <th>A/C NO. CODE</th>
+                                    <th style="text-align: center;">DR</th>
+                                    <th style="text-align: center;">CR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.breakdown_line_ids" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="line.description"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.account_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.account_id.code"/>
+                                        </td>
+                                        <td t-attf-style="text-align:center;">
+                                            <t t-out="float(line.debit_amount or 0)"
+                                               t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                        <td t-attf-style="text-align:center;">
+                                            <t t-out="float(line.credit_amount or 0)"
+                                               t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="3" style="font-weight:bold; text-align:left;">Total</td>
+                                    <td style="font-weight:bold; text-align:center;">
+                                        <t t-out="float(sum([l.debit_amount for l in o.breakdown_line_ids]))"
+                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                    <td style="font-weight:bold; text-align:center;">
+                                        <t t-out="float(sum([l.credit_amount for l in o.breakdown_line_ids]))"
+                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- Certificate -->
+                        <br/>
+                        <table style="border: white; width:100%; font-size: 10px;">
+                            <tr>
+                                <td style="border-bottom: 1px solid black;" colspan="3">
+                                    <strong>CERTIFICATE</strong>
+                                    <br/>
+                                    I certify that the above is correct and was incurred under the relevant financial
+                                    authority or other regulations quoted: that the services have been duly performed
+                                    and that the rate/price charged is according to regulations/contract fair and
+                                    reasonable.
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <!-- Setting values for approval details -->
+                        <t t-set="checked_line" t-value="None"/>
+                        <t t-set="authorized_line" t-value="None"/>
+                        <t t-foreach="o.approval_log_ids" t-as="log">
+                            <t t-if="log.action == 'checked' and not checked_line">
+                                <t t-set="checked_line" t-value="log"/>
+                            </t>
+                            <t t-if="log.action == 'authorized' and not authorized_line">
+                                <t t-set="authorized_line" t-value="log"/>
+                            </t>
+                        </t>
+                        <!-- Signature Block with Stamp -->
+                        <table style="border: white;width:100%; font-size: 12px;">
+                            <tr>
+                                <td>e-payment mandate No: .........................</td>
+                                <td>Date: .........................</td>
+                            </tr>
+                            <tr>
+                                <td style="position: relative; padding: 20px;">
+                                    <div style="position: relative; z-index: 1;">
+                                        <strong>Prepared by:</strong>
+                                        <br/>
+                                        <span t-esc="o.prepared_by.name"/>
+                                        <br/>
+                                        Sign:
+                                        <t t-if="o.prepared_by and o.prepared_by.user_id.user_signature">
+                                            <span style="display: inline-block; width: 160px; height: 80px; position: relative;">
+                                                <img t-att-src="image_data_uri(o.prepared_by.user_id.user_signature)"
+                                                     style="position: absolute; top: 0; left: 0; opacity: 0.7; transform: rotate(-5deg); max-width: 100%; max-height: 100%;"
+                                                     class="oe_avatar"/>
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span>.........................</span>
+                                        </t>
+
+                                        <br/>
+                                        Date:
+                                        <t t-if="o.payment_date">
+                                            <span t-esc="o.payment_date.strftime('%d-%m-%Y')"/>
+                                        </t>
+                                    </div>
+                                    <!-- Stamp image overlay -->
+                                    <img t-att-src="image_data_uri(o.company_id.company_stamp)"
+                                         style="position: absolute; top: 20px; left: 100px; opacity: 0.5;max-width: 150px; max-height: 150px; z-index: 0;"
+                                         class="oe_avatar"/>
+                                </td>
+                                <!-- Checked by -->
+                                <td style="position: relative; padding: 20px;">
+                                    <div style="position: relative; z-index: 1;">
+                                        <strong>Checked by:</strong>
+                                        <br/>
+                                        <t t-if="checked_line and checked_line.user_id">
+                                            <span t-esc="checked_line.user_id.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span>N/A</span>
+                                        </t>
+                                        <br/>
+                                        Sign:
+                                        <t t-if="checked_line and checked_line.user_id.user_signature">
+                                            <span style="display: inline-block; width: 160px; height: 80px; position: relative;">
+                                                <img t-att-src="image_data_uri(checked_line.user_id.user_signature)"
+                                                     style="position: absolute; top: 0; left: 0; opacity: 0.7; transform: rotate(-5deg); max-width: 100%; max-height: 100%;"
+                                                     class="oe_avatar"/>
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span>.........................</span>
+                                        </t>
+                                        <br/>
+                                        Date:
+                                        <span t-esc="checked_line and checked_line.date.strftime('%d-%m-%Y') if checked_line else '-'"/>
+                                    </div>
+                                    <!-- Stamp image -->
+                                    <img t-att-src="image_data_uri(o.company_id.company_stamp)"
+                                         style="position: absolute; top: 20px; left: 80px; opacity: 0.5;transform: rotate(-15deg); max-width: 150px; max-height: 150px; z-index: 0;"
+                                         class="oe_avatar"/>
+                                </td>
+
+                                <!-- Authorized by -->
+                                <td style="position: relative; padding: 20px;">
+                                    <div style="position: relative; z-index: 1;">
+                                        <strong>Authorized by:</strong>
+                                        <br/>
+                                        <t t-if="authorized_line and authorized_line.user_id">
+                                            <span t-esc="authorized_line.user_id.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span>N/A</span>
+                                        </t>
+                                        <br/>
+                                        Sign:
+                                        <t t-if="authorized_line and authorized_line.user_id.user_signature">
+                                            <span style="display: inline-block; width: 160px; height: 80px; position: relative;">
+                                                <img t-att-src="image_data_uri(authorized_line.user_id.user_signature)"
+                                                     style="position: absolute; top: 0; left: 0; opacity: 0.7; transform: rotate(-5deg); max-width: 100%; max-height: 100%;"
+                                                     class="oe_avatar"/>
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span>.........................</span>
+                                        </t>
+                                        <br/>
+                                        Date:
+                                        <span t-esc="authorized_line and authorized_line.date.strftime('%d-%m-%Y') if authorized_line else '-'"/>
+                                    </div>
+                                    <!-- Stamp image -->
+                                    <img t-att-src="image_data_uri(o.company_id.company_stamp)"
+                                         style="position: absolute; top: 20px; left: 80px; opacity: 0.5;transform: rotate(-15deg); max-width: 150px; max-height: 150px; z-index: 0;"
+                                         class="oe_avatar"/>
+                                </td>
+
+                            </tr>
+                        </table>
+                        <!-- Approval Log -->
+                        <br/>
+                        <span style="font-weight: bold;">APPROVAL LOG</span>
+                        <table style="width:100%; font-size: 12px;">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Comment</th>
+                                    <th>Performed By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.approval_log_ids" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="line.date.strftime('%d-%m-%Y %H:%M:%S')"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.action.replace('_', ' ').title()"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.comment.capitalize()"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.user_id.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+    <!--    <template id="report_payment_voucher">-->
+    <!--        <t t-call="web.html_container">-->
+    <!--            <t t-call="custom_payment_voucher.custom_sale_external_layout">-->
+    <!--                <div class="page">-->
+    <!--                    <t t-foreach="docs" t-as="o">-->
+    <!--                        <table class="table table-sm" style="border: 0px solid white;width: 100%;">-->
+    <!--                            <tr>-->
+    <!--                                &lt;!&ndash; Document No. on the left &ndash;&gt;-->
+    <!--                                <td style="text-align: left; width: 32%;">-->
+    <!--                                    <p>-->
+    <!--                                        <strong>Document No.:</strong>-->
+    <!--                                        <span t-esc="o.name"/>-->
+    <!--                                    </p>-->
+    <!--                                </td>-->
+    <!--                                &lt;!&ndash; Project Unit Name centered &ndash;&gt;-->
+    <!--                                <td style="text-align: left; width: auto;">-->
+    <!--                                    <t t-if="o.voucher_id.projects == 'special'">-->
+    <!--                                        <span style="color: #007bff; font-weight: bold; text-decoration: underline;">-->
+    <!--                                            SPECIAL PROJECT UNIT PAYMENT VOUCHER-->
+    <!--                                        </span>-->
+    <!--                                    </t>-->
+    <!--                                    <t t-elif="o.voucher_id.projects == 'state'">-->
+    <!--                                        <span style="color: #28a745; font-weight: bold; text-decoration: underline;">-->
+    <!--                                            STATE PROJECT UNIT PAYMENT VOUCHER-->
+    <!--                                        </span>-->
+    <!--                                    </t>-->
+    <!--                                    <t t-elif="o.voucher_id.projects == 'expenditure'">-->
+    <!--                                        <span style="color: #dc3545; font-weight: bold; text-decoration: underline;">-->
+    <!--                                            EXPENDITURE UNIT PAYMENT VOUCHER-->
+    <!--                                        </span>-->
+    <!--                                    </t>-->
+    <!--                                </td>-->
+    <!--                                <td>-->
+    <!--                                    <p>-->
+    <!--                                        <strong>Date:</strong>-->
+    <!--                                        <t t-if="o.payment_date">-->
+    <!--                                            <span t-esc="o.payment_date.strftime('%d-%m-%Y')"/>-->
+    <!--                                        </t>-->
+    <!--                                        <t t-else="">-->
+    <!--                                            <span>-</span>-->
+    <!--                                        </t>-->
+    <!--                                    </p>-->
+    <!--                                </td>-->
+    <!--                            </tr>-->
+    <!--                        </table>-->
+    <!--                        <table class="table table-sm" style="border: 0px solid white;width: 100%;">-->
+    <!--                            <tr>-->
+    <!--                                <td style="text-align: left; width: 32%;">-->
+    <!--                                    Partner Name:-->
+    <!--                                    <span t-esc="o.partner_id.name"/>-->
+    <!--                                    Address:-->
+    <!--                                    <div t-field="o.partner_id"-->
+    <!--                                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>-->
+    <!--                                </td>-->
+    <!--                                <td style="text-align: center; width: auto;">-->
+    <!--                                    Amount in Figures:-->
+    <!--                                    <br/>-->
+    <!--                                    <strong>-->
+    <!--                                        <span t-esc="'{:.2f}'.format(o.amount_to_paid)"/>-->
+    <!--                                    </strong>-->
+    <!--                                    <br/>-->
+    <!--                                    Amount in words:-->
+    <!--                                    <br/>-->
+    <!--                                    <strong style="text-transform: capitalize;">-->
+    <!--                                        <span t-esc="o.currency_id.amount_to_text(o.amount_to_paid)"/>-->
+    <!--                                    </strong>-->
+    <!--                                </td>-->
+    <!--                            </tr>-->
+    <!--                        </table>-->
+    <!--                        <table class="table table-sm" style="border: 1px solid black;width: 100%;">-->
+    <!--                            <td colspan="3" style="text-align: left;">-->
+    <!--                                <strong>DETAILS:</strong>-->
+    <!--                                <br/>-->
+    <!--                                <span t-esc="o.voucher_id.purpose"/>-->
+
+    <!--                            </td>-->
+    <!--                        </table>-->
+    <!--                        <br/>-->
+    <!--                        <table style="border: 1px solid black;width:100%; font-size: 12px;">-->
+    <!--                            <thead>-->
+    <!--                                <tr>-->
+    <!--                                    <th>Description</th>-->
+    <!--                                    <th>Account</th>-->
+    <!--                                    <th>A/C NO. CODE</th>-->
+    <!--                                    <th style="text-align: center;">DR</th>-->
+    <!--                                    <th style="text-align: center;">CR</th>-->
+    <!--                                </tr>-->
+    <!--                            </thead>-->
+    <!--                            <tbody>-->
+    <!--                                <t t-foreach="o.breakdown_line_ids" t-as="line">-->
+    <!--                                    <tr>-->
+    <!--                                        <td>-->
+    <!--                                            <t t-esc="line.description"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td>-->
+    <!--                                            <t t-esc="line.account_id.name"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td>-->
+    <!--                                            <t t-esc="line.account_id.code"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td t-attf-style="text-align:center;">-->
+    <!--                                            <t t-esc="line.debit_amount and '%.2f' % line.debit_amount or ''"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td t-attf-style="text-align:center;">-->
+    <!--                                            <t t-esc="line.credit_amount and '%.2f' % line.credit_amount or ''"/>-->
+    <!--                                        </td>-->
+    <!--                                    </tr>-->
+    <!--                                </t>-->
+    <!--                                &lt;!&ndash; Total Row &ndash;&gt;-->
+    <!--                                <tr style="border: 1px solid black;">-->
+    <!--                                    <td colspan="3" style="font-weight:bold; text-align:left;">Total</td>-->
+    <!--                                    <td style="font-weight:bold; text-align:center;">-->
+    <!--                                        <t t-esc="'%.2f' % sum([l.debit_amount for l in o.breakdown_line_ids])"/>-->
+    <!--                                    </td>-->
+    <!--                                    <td style="font-weight:bold; text-align:center;">-->
+    <!--                                        <t t-esc="'%.2f' % sum([l.credit_amount for l in o.breakdown_line_ids])"/>-->
+    <!--                                    </td>-->
+    <!--                                </tr>-->
+    <!--                            </tbody>-->
+    <!--                        </table>-->
+    <!--                        <br/>-->
+    <!--                        <table style="width:100%;border-bottom: 1px solid black;font-size: 10px;">-->
+    <!--                            <tr>-->
+    <!--                                <td colspan="3">-->
+    <!--                                    <strong>CERTIFICATE</strong>-->
+    <!--                                    <br/>-->
+    <!--                                    I certify that the above is correct and was incurred under the relevant financial-->
+    <!--                                    authority or other regulations quoted: that the services have been duly performed-->
+    <!--                                    and that the rate/price charged is according to regulations/contract fair and-->
+    <!--                                    reasonable.-->
+    <!--                                </td>-->
+    <!--                            </tr>-->
+    <!--                        </table>-->
+    <!--                        <br/>-->
+    <!--                        <table style="width:100%; font-size: 12px;">-->
+    <!--                            <tr>-->
+    <!--                                <td>e-payment mandate No: .........................</td>-->
+    <!--                                <td>Date: .........................</td>-->
+    <!--                            </tr>-->
+    <!--                            <tr>-->
+    <!--                                <td>Prepared by:-->
+    <!--                                    <br/>-->
+    <!--                                    Name:-->
+    <!--                                    <span t-esc="o.prepared_by.name"/>-->
+    <!--                                    <br/>-->
+    <!--                                    Sign: ....................-->
+    <!--                                    <br/>-->
+    <!--                                    Date:-->
+    <!--                                    <t t-if="o.payment_date">-->
+    <!--                                        <span t-esc="o.payment_date.strftime('%d-%m-%Y')"/>-->
+    <!--                                    </t>-->
+    <!--                                </td>-->
+    <!--                                <td>-->
+    <!--                                    Checked by:-->
+    <!--                                    <br/>-->
+    <!--                                    <t t-if="checked_line and checked_line.user_id">-->
+    <!--                                        <span t-esc="checked_line.user_id.name"/>-->
+    <!--                                    </t>-->
+    <!--                                    <t t-else="">-->
+    <!--                                        <span>N/A</span>-->
+    <!--                                    </t>-->
+    <!--                                    <br/>-->
+    <!--                                    Sign: ....................-->
+    <!--                                    <br/>-->
+    <!--                                    Date:-->
+    <!--                                    <span t-esc="checked_line and checked_line.date.strftime('%d-%m-%Y') if checked_line else '-'"/>-->
+    <!--                                </td>-->
+    <!--                                <td>-->
+    <!--                                    <img t-att-src="image_data_uri(o.company_id.company_stamp)"-->
+    <!--                                         style="max-width: 150px; max-height: 150px;" class="oe_avatar"/>-->
+    <!--                                </td>-->
+    <!--                                <td>-->
+    <!--                                    Authorized by:-->
+    <!--                                    <br/>-->
+    <!--                                    Name:-->
+    <!--                                    <t t-if="checked_line and checked_line.date">-->
+    <!--                                        <span t-esc="checked_line.date.strftime('%d-%m-%Y')"/>-->
+    <!--                                    </t>-->
+    <!--                                    <t t-else="">-->
+    <!--                                        <span>-</span>-->
+    <!--                                    </t>a-->
+
+    <!--                                    <br/>-->
+    <!--                                    Sign: ....................-->
+    <!--                                    <br/>-->
+    <!--                                    Date:-->
+    <!--                                    <span t-esc="authorized_line and authorized_line.date.strftime('%d-%m-%Y') if authorized_line else '-'"/>-->
+    <!--                                </td>-->
+    <!--                            </tr>-->
+    <!--                        </table>-->
+    <!--                        <br/>-->
+    <!--                        <span style="font-weight: bold;">APPROVAL LOG</span>-->
+    <!--                        <table style="border: 1px solid black;width:100%; font-size: 12px;">-->
+    <!--                            <thead>-->
+    <!--                                <tr>-->
+    <!--                                    <th>Date</th>-->
+    <!--                                    <th>Description</th>-->
+    <!--                                    <th>Comment</th>-->
+    <!--                                    <th>Performed By</th>-->
+    <!--                                </tr>-->
+    <!--                            </thead>-->
+    <!--                            <tbody>-->
+    <!--                                <t t-foreach="o.approval_log_ids" t-as="line">-->
+    <!--                                    <tr>-->
+    <!--                                        <td>-->
+    <!--                                            <t t-esc="line.date"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td>-->
+    <!--                                            <t t-esc="line.action"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td>-->
+    <!--                                            <t t-esc="line.comment"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td>-->
+    <!--                                            <t t-esc="line.user_id.name"/>-->
+    <!--                                        </td>-->
+    <!--                                    </tr>-->
+    <!--                                </t>-->
+    <!--                            </tbody>-->
+    <!--                        </table>-->
+    <!--                    </t>-->
+    <!--                    &lt;!&ndash; The rest of your report content &ndash;&gt;-->
+    <!--                </div>-->
+    <!--            </t>-->
+    <!--        </t>-->
+    <!--    </template>-->
+</odoo>

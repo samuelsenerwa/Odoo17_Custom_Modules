@@ -1,0 +1,91 @@
+<odoo>
+
+    <record id="action_coa_xls_report" model="ir.actions.server">
+        <field name="name">Print COA XLS</field>
+        <field name="model_id" ref="model_account_open_chart"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = {
+            'type': 'ir.actions.act_url',
+            'url': '/account_parent/xls/coa_report?active_id=%s' % record.id,
+            'target': 'new',
+            }
+        </field>
+    </record>
+
+    <record id="view_account_chart" model="ir.ui.view">
+        <field name="name">account.open.chart.form</field>
+        <field name="model">account.open.chart</field>
+        <field name="arch" type="xml">
+            <form string="Account charts">
+                <group>
+                    <group>
+                        <field name="target_move" widget='radio'/>
+                        <field name="display_account" widget='radio'/>
+                    </group>
+                    <group>
+                        <label for="date_from" string="Date(s)"/>
+                        <div>
+                            <field name="date_from" class="oe_inline"/>
+                            -
+                            <field name="date_to" class="oe_inline"/>
+                        </div>
+                        <field name="show_initial_balance"
+                               invisible="'date_from' == False"/>
+                        <field name="unfold" invisible="1"/>
+                        <label for="report_type"/>
+                        <div>
+                            <field name="report_type"
+                                   required="1"/><!-- widget='radio' -->
+                            <p class="oe_grey"
+                               invisible="has_parent or report_type == 'account_type'">
+                                Note: No hierarchical view will be displayed as there is
+                                no hierarchy defined. Please set parent accounts first
+                            </p>
+                        </div>
+                        <field name="has_parent" invisible="1"/>
+
+                    </group>
+                    <group name="company" groups="base.group_multi_company">
+                        <field name="company_id" groups="base.group_multi_company"
+                               options="{'no_create': True, 'no_open': True}"
+                               domain="[('id', 'in', allowed_company_ids)]"
+                               readonly="0"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button string="Open Charts"
+                            name="account_chart_open_window" type="object"
+                            class="btn-primary"/>
+                    or
+                    <button string="Print PDF"
+                            type="object"
+                            name="btn_print_pdf"
+                            class="btn-secondary"/>
+                    or
+                    <button string="Print XLS"
+                            type="action"
+                            name="%(account_parent.action_coa_xls_report)d"
+                            class="btn-secondary"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_chart" model="ir.actions.act_window">
+        <field name="name">Chart of Accounts Hierarchy</field>
+        <field name="res_model">account.open.chart</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_account_chart"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_account_chart"
+              id="menu_action_account_chart" parent="account.menu_finance_reports"
+              groups="group_coas_user"
+              sequence="21"/>
+
+</odoo>

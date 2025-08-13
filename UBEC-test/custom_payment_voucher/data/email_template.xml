@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="email_template_payment_voucher_notify" model="mail.template">
+            <field name="name">Payment Voucher Approval Notification</field>
+            <field name="model_id" ref="model_payment_voucher_breakdown"/>
+            <field name="email_from">{{(object.create_uid.email_formatted)}}</field>
+            <field name="subject">Action Required: Payment Voucher {{object.name}}</field>
+            <field name="description">Payment Voucher Approval Notification to Approver</field>
+            <field name="body_html" type="html">
+                <div style="font-family:Arial, sans-serif; font-size:14px;">
+                    <p>Hello,
+                        <t t-out="user_name or ''">Administrator</t>
+                    </p>
+                    <p>
+                        A payment voucher
+                        <strong>
+                            <t t-out="object.name"/>
+                        </strong>
+                        for
+                        <strong>
+                            <t t-out="object.partner_id.name"/>
+                        </strong>
+                        is pending your approval with a value of
+                        <strong>
+                            <t t-esc="'%.2f' % object.amount_to_paid"/>
+                        </strong>
+                        .
+                    </p>
+                    <p>You can access the document using the link below:</p>
+                    <p>
+                        <t t-set="website_url" t-value="object.get_base_url()"></t>
+                        Record URL :
+                        <b>
+                            <a t-att-href='website_url'>
+                                View Payment Voucher
+                            </a>
+                        </b>
+                    </p>
+                    <br/>
+                    <p>Thank you,
+                        <br/>
+                        <t t-out="object.create_uid.name or 'System'"></t>
+                    </p>
+                </div>
+
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{object.partner_id.lang}}</field>
+        </record>
+    </data>
+</odoo>

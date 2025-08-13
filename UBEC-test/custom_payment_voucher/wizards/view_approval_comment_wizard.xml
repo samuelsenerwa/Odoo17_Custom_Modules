@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_approval_comment_wizard_form" model="ir.ui.view">
+        <field name="name">approval.comment.wizard.form</field>
+        <field name="model">approval.comment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enter Comment" version="7.0">
+                <group>
+                    <field name="voucher_id" readonly="1"/>
+                    <field name="action_type" readonly="1"/>
+                </group>
+                <group>
+                    <field name="comment" placeholder="Enter your comment here..." required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="action_approval_comment_wizard"
+                name="Approval Comment"
+                res_model="approval.comment.wizard"
+                view_mode="form"
+                target="new"
+                view_id="view_approval_comment_wizard_form"/>
+
+    <!-- Approval Comment Wizard for voucher details -->
+    <record id="view_approval_comment_wizard_voucher_form" model="ir.ui.view">
+        <field name="name">approval.comment.wizard.voucher.form</field>
+        <field name="model">approval.comment.wizard.voucher</field>
+        <field name="arch" type="xml">
+            <form string="Enter Comment" version="7.0">
+                <group>
+                    <field name="voucher_id" readonly="1"/>
+                    <field name="action_type" readonly="1"/>
+                </group>
+                <group>
+                    <field name="comment" placeholder="Enter your comment here..." required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="action_approval_comment_voucher_wizard"
+                name="Approval Comment For Voucher"
+                res_model="approval.comment.wizard.voucher"
+                view_mode="form"
+                target="new"
+                view_id="view_approval_comment_wizard_voucher_form"/>
+
+</odoo>
